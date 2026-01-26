@@ -15,3 +15,4 @@ This folder contains shared contracts consumed by:
 - `schemas/ReleasePlan.schema.json`
 - `schemas/ReleaseStatus.schema.json`
 - `schemas/Operation.schema.json`
+# xyn-contracts
