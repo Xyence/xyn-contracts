@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xyn.example/schemas/ReleasePlan.schema.json",
+  "title": "ReleasePlan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "planId",
+    "releaseId",
+    "revisionFrom",
+    "revisionTo",
+    "summary",
+    "actions",
+    "artifacts"
+  ],
+  "properties": {
+    "planId": {
+      "type": "string"
+    },
+    "releaseId": {
+      "type": "string"
+    },
+    "revisionFrom": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "revisionTo": {
+      "type": "integer"
+    },
+    "summary": {
+      "type": "string"
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "op",
+          "targetType",
+          "targetName"
+        ],
+        "properties": {
+          "op": {
+            "type": "string",
+            "enum": [
+              "create",
+              "update",
+              "delete",
+              "noop"
+            ]
+          },
+          "targetType": {
+            "type": "string",
+            "enum": [
+              "deployment",
+              "service",
+              "volume",
+              "network",
+              "route"
+            ]
+          },
+          "targetName": {
+            "type": "string"
+          },
+          "details": {
+            "type": "object",
+            "additionalProperties": true,
+            "default": {}
+          }
+        }
+      }
+    },
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "runtimeSpecPath": {
+          "type": "string"
+        },
+        "backendPlanPath": {
+          "type": "string"
+        },
+        "composeYamlPath": {
+          "type": "string"
+        },
+        "diffPath": {
+          "type": "string"
+        }
+      },
+      "default": {}
+    }
+  }
+}

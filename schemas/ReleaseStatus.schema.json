@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xyn.example/schemas/ReleaseStatus.schema.json",
+  "title": "ReleaseStatus",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "releaseId",
+    "desiredRevision",
+    "observed",
+    "services"
+  ],
+  "properties": {
+    "releaseId": {
+      "type": "string"
+    },
+    "desiredRevision": {
+      "type": "integer"
+    },
+    "observed": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "timestamp"
+      ],
+      "properties": {
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "backend": {
+          "type": "string",
+          "enum": [
+            "compose",
+            "k8s"
+          ]
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "services": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "state"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "running",
+              "stopped",
+              "degraded",
+              "unknown"
+            ]
+          },
+          "health": {
+            "type": "string",
+            "enum": [
+              "healthy",
+              "unhealthy",
+              "starting",
+              "unknown"
+            ],
+            "default": "unknown"
+          },
+          "details": {
+            "type": "object",
+            "additionalProperties": true,
+            "default": {}
+          }
+        }
+      }
+    }
+  }
+}
