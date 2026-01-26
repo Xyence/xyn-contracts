@@ -1,0 +1,99 @@
+openapi: 3.0.3
+info:
+  title: ShineSeed Control Plane API
+  version: 0.1.0
+  description: Plan/apply/status APIs for long-running service management.
+servers:
+  - url: /api/v1
+paths:
+  /releases/plan:
+    post:
+      summary: Plan a release
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReleasePlanRequest'
+      responses:
+        '200':
+          description: Release plan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleasePlan'
+  /releases/apply:
+    post:
+      summary: Apply a release plan
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReleaseApplyRequest'
+      responses:
+        '200':
+          description: Operation status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Operation'
+  /releases/{release_id}/status:
+    get:
+      summary: Get release status
+      parameters:
+        - name: release_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Release status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleaseStatus'
+  /operations/{operation_id}:
+    get:
+      summary: Get operation status
+      parameters:
+        - name: operation_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Operation status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Operation'
+components:
+  schemas:
+    ReleasePlanRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - release_spec
+      properties:
+        release_spec:
+          $ref: '../schemas/ReleaseSpec.schema.json'
+    ReleaseApplyRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - release_id
+        - plan_id
+      properties:
+        release_id:
+          type: string
+        plan_id:
+          type: string
+    ReleasePlan:
+      $ref: '../schemas/ReleasePlan.schema.json'
+    ReleaseStatus:
+      $ref: '../schemas/ReleaseStatus.schema.json'
+    Operation:
+      $ref: '../schemas/Operation.schema.json'

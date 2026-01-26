@@ -1,0 +1,58 @@
+{
+  "apiVersion": "xyn.shineseed/v1",
+  "kind": "Release",
+  "metadata": {
+    "name": "runner",
+    "namespace": "core",
+    "labels": {
+      "app": "runner",
+      "owner": "shineseed"
+    }
+  },
+  "backend": {
+    "type": "compose"
+  },
+  "components": [
+    {
+      "name": "runner-api",
+      "image": "xyence/runner-api:dev",
+      "ports": [
+        { "name": "http", "containerPort": 8088, "hostPort": 8088, "protocol": "tcp" }
+      ],
+      "env": {
+        "RUNNER_QUEUE_URL": "redis://runner-redis:6379/0",
+        "RUNNER_WORKSPACE": "/workspace",
+        "RUNNER_LOG_LEVEL": "info"
+      },
+      "volumeMounts": [
+        { "volume": "runner-workspace", "mountPath": "/workspace" }
+      ]
+    },
+    {
+      "name": "runner-worker",
+      "image": "xyence/runner-worker:dev",
+      "env": {
+        "RUNNER_QUEUE_URL": "redis://runner-redis:6379/0",
+        "RUNNER_WORKSPACE": "/workspace",
+        "RUNNER_LOG_LEVEL": "info"
+      },
+      "volumeMounts": [
+        { "volume": "runner-workspace", "mountPath": "/workspace" }
+      ],
+      "dependsOn": ["runner-redis"]
+    },
+    {
+      "name": "runner-redis",
+      "image": "redis:7-alpine",
+      "ports": [
+        { "name": "redis", "containerPort": 6379, "hostPort": 6379, "protocol": "tcp" }
+      ]
+    }
+  ],
+  "volumes": [
+    { "name": "runner-workspace", "type": "dockerVolume" }
+  ],
+  "networks": [
+    { "name": "runner-net", "type": "dockerNetwork" }
+  ]
+}

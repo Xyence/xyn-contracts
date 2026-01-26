@@ -1,0 +1,103 @@
+{
+  "apiVersion": "xyn.shineseed/v1",
+  "kind": "Runtime",
+  "metadata": {
+    "name": "runner",
+    "namespace": "core",
+    "labels": {
+      "app": "runner",
+      "owner": "shineseed"
+    }
+  },
+  "release": {
+    "releaseId": "core.runner",
+    "revision": 1,
+    "backend": { "type": "compose" }
+  },
+  "networks": [
+    { "name": "runner-net" }
+  ],
+  "volumes": [
+    { "name": "runner-workspace", "type": "dockerVolume" }
+  ],
+  "deployments": [
+    {
+      "name": "runner-api",
+      "replicas": 1,
+      "podTemplate": {
+        "labels": { "app": "runner-api" },
+        "containers": [
+          {
+            "name": "runner-api",
+            "image": "xyence/runner-api:dev",
+            "ports": [
+              { "name": "http", "containerPort": 8088, "publishedPort": 8088, "protocol": "tcp" }
+            ],
+            "env": [
+              { "name": "RUNNER_QUEUE_URL", "value": "redis://runner-redis:6379/0" },
+              { "name": "RUNNER_WORKSPACE", "value": "/workspace" },
+              { "name": "RUNNER_LOG_LEVEL", "value": "info" }
+            ],
+            "volumeMounts": [
+              { "name": "runner-workspace", "mountPath": "/workspace" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "runner-worker",
+      "replicas": 1,
+      "podTemplate": {
+        "labels": { "app": "runner-worker" },
+        "containers": [
+          {
+            "name": "runner-worker",
+            "image": "xyence/runner-worker:dev",
+            "env": [
+              { "name": "RUNNER_QUEUE_URL", "value": "redis://runner-redis:6379/0" },
+              { "name": "RUNNER_WORKSPACE", "value": "/workspace" },
+              { "name": "RUNNER_LOG_LEVEL", "value": "info" }
+            ],
+            "volumeMounts": [
+              { "name": "runner-workspace", "mountPath": "/workspace" }
+            ]
+          }
+        ]
+      },
+      "dependsOn": ["runner-redis"]
+    },
+    {
+      "name": "runner-redis",
+      "replicas": 1,
+      "podTemplate": {
+        "labels": { "app": "runner-redis" },
+        "containers": [
+          {
+            "name": "runner-redis",
+            "image": "redis:7-alpine",
+            "ports": [
+              { "name": "redis", "containerPort": 6379, "publishedPort": 6379, "protocol": "tcp" }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "services": [
+    {
+      "name": "runner-api",
+      "selector": { "app": "runner-api" },
+      "ports": [
+        { "name": "http", "port": 8088, "targetPort": 8088, "protocol": "tcp" }
+      ]
+    },
+    {
+      "name": "runner-redis",
+      "selector": { "app": "runner-redis" },
+      "ports": [
+        { "name": "redis", "port": 6379, "targetPort": 6379, "protocol": "tcp" }
+      ]
+    }
+  ]
+}
