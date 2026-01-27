@@ -14,7 +14,11 @@
   "properties": {
     "apiVersion": {
       "type": "string",
-      "const": "xyn.shineseed/v1"
+      "enum": [
+        "xyn.seed/v1",
+        "xyn.shineseed/v1"
+      ],
+      "default": "xyn.seed/v1"
     },
     "kind": {
       "type": "string",
