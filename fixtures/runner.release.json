@@ -6,7 +6,7 @@
     "namespace": "core",
     "labels": {
       "app": "runner",
-      "owner": "shineseed"
+      "owner": "xyn-seed"
     }
   },
   "backend": {
@@ -15,14 +15,16 @@
   "components": [
     {
       "name": "runner-api",
-      "image": "xyence/runner-api:dev",
+      "image": "xyence/xyn-runner-api:git-b56708f",
       "ports": [
         { "name": "http", "containerPort": 8088, "hostPort": 8088, "protocol": "tcp" }
       ],
       "env": {
         "RUNNER_QUEUE_URL": "redis://runner-redis:6379/0",
         "RUNNER_WORKSPACE": "/workspace",
-        "RUNNER_LOG_LEVEL": "info"
+        "RUNNER_LOG_LEVEL": "info",
+        "RUNNER_REDIS_URL": "redis://runner-redis:6379/0",
+        "RUNNER_QUEUE_NAME": "default"
       },
       "volumeMounts": [
         { "volume": "runner-workspace", "mountPath": "/workspace" }
@@ -30,9 +32,10 @@
     },
     {
       "name": "runner-worker",
-      "image": "xyence/runner-worker:dev",
+      "image": "xyence/xyn-runner-worker:git-b56708f",
       "env": {
-        "RUNNER_QUEUE_URL": "redis://runner-redis:6379/0",
+        "RUNNER_REDIS_URL": "redis://runner-redis:6379/0",
+        "RUNNER_QUEUE_NAME": "default",
         "RUNNER_WORKSPACE": "/workspace",
         "RUNNER_LOG_LEVEL": "info"
       },
@@ -44,6 +47,12 @@
     {
       "name": "runner-redis",
       "image": "redis:7-alpine",
+      "healthcheck": {
+        "test": ["CMD", "redis-cli", "ping"],
+        "interval": "10s",
+        "timeout": "5s",
+        "retries": 5
+      },
       "ports": [
         { "name": "redis", "containerPort": 6379, "hostPort": 6379, "protocol": "tcp" }
       ]

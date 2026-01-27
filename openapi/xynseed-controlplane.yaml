@@ -1,0 +1,293 @@
+openapi: 3.0.3
+info:
+  title: Xyn Seed Control Plane API
+  version: 0.1.0
+  description: Plan/apply/status APIs for long-running service management.
+servers:
+  - url: /api/v1
+paths:
+  /releases:
+    get:
+      summary: List releases
+      responses:
+        '200':
+          description: Release list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReleaseSummary'
+  /releases/{release_id}:
+    get:
+      summary: Get release details
+      parameters:
+        - name: release_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Release details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleaseDetails'
+  /releases/plan:
+    post:
+      summary: Plan a release
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReleasePlanRequest'
+      responses:
+        '200':
+          description: Release plan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleasePlan'
+  /releases/apply:
+    post:
+      summary: Apply a release plan
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReleaseApplyRequest'
+      responses:
+        '200':
+          description: Operation status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Operation'
+  /releases/{release_id}/status:
+    get:
+      summary: Get release status
+      parameters:
+        - name: release_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Release status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleaseStatus'
+  /operations/{operation_id}:
+    get:
+      summary: Get operation status
+      parameters:
+        - name: operation_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Operation status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Operation'
+  /releases/{release_id}/operations:
+    get:
+      summary: List release operations
+      parameters:
+        - name: release_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Operation timeline
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Operation'
+  /releases/{release_id}/plan/stop:
+    post:
+      summary: Plan stop release
+      parameters:
+        - name: release_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Release plan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleasePlan'
+  /releases/{release_id}/plan/restart:
+    post:
+      summary: Plan restart service
+      parameters:
+        - name: release_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+                - serviceName
+              properties:
+                serviceName:
+                  type: string
+      responses:
+        '200':
+          description: Release plan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleasePlan'
+  /releases/{release_id}/plan/destroy:
+    post:
+      summary: Plan destroy release
+      parameters:
+        - name: release_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                removeVolumes:
+                  type: boolean
+                  default: false
+      responses:
+        '200':
+          description: Release plan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleasePlan'
+  /plans/{plan_id}/apply:
+    post:
+      summary: Apply a plan by id
+      parameters:
+        - name: plan_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Operation status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Operation'
+  /operations/{operation_id}/logs:
+    get:
+      summary: Get operation logs
+      parameters:
+        - name: operation_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Operation logs
+          content:
+            text/plain:
+              schema:
+                type: string
+  /artifacts/{artifact_id}:
+    get:
+      summary: Download artifact content
+      parameters:
+        - name: artifact_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Artifact content
+          content:
+            text/plain:
+              schema:
+                type: string
+components:
+  schemas:
+    ReleasePlanRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - release_spec
+      properties:
+        release_spec:
+          $ref: '../schemas/ReleaseSpec.schema.json'
+    ReleaseApplyRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - release_id
+        - plan_id
+      properties:
+        release_id:
+          type: string
+        plan_id:
+          type: string
+    ReleasePlan:
+      $ref: '../schemas/ReleasePlan.schema.json'
+    ReleaseSummary:
+      $ref: '../schemas/ReleaseSummary.schema.json'
+    ReleaseDetails:
+      $ref: '../schemas/ReleaseDetails.schema.json'
+    ReleaseStatus:
+      $ref: '../schemas/ReleaseStatus.schema.json'
+    Operation:
+      $ref: '../schemas/Operation.schema.json'
+  /releases/{release_id}/artifacts/{artifact_kind}:
+    get:
+      summary: Download latest release artifact by kind
+      parameters:
+        - name: release_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: artifact_kind
+          in: path
+          required: true
+          schema:
+            type: string
+            enum:
+              - releaseSpec
+              - runtimeSpec
+              - composeYaml
+      responses:
+        '200':
+          description: Artifact content
+          content:
+            text/plain:
+              schema:
+                type: string

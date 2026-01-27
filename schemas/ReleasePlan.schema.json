@@ -57,6 +57,7 @@
             "enum": [
               "deployment",
               "service",
+              "release",
               "volume",
               "network",
               "route"
@@ -77,6 +78,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "releaseSpecPath": {
+          "type": "string"
+        },
         "runtimeSpecPath": {
           "type": "string"
         },
@@ -90,6 +94,14 @@
           "type": "string"
         }
       },
+      "default": {}
+    },
+    "actionKind": {
+      "type": "string"
+    },
+    "options": {
+      "type": "object",
+      "additionalProperties": true,
       "default": {}
     }
   }

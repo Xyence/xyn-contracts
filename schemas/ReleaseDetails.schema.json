@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xyn.example/schemas/ReleaseDetails.schema.json",
+  "title": "ReleaseDetails",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "releaseId",
+    "name",
+    "namespace",
+    "revision",
+    "backend",
+    "updatedAt",
+    "releaseSpec",
+    "artifacts"
+  ],
+  "properties": {
+    "releaseId": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "namespace": {
+      "type": "string"
+    },
+    "revision": {
+      "type": "integer"
+    },
+    "backend": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "releaseSpec": {
+      "$ref": "./ReleaseSpec.schema.json"
+    },
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "releaseSpecPath": {
+          "type": "string"
+        },
+        "runtimeSpecPath": {
+          "type": "string"
+        },
+        "composeYamlPath": {
+          "type": "string"
+        }
+      },
+      "default": {}
+    }
+  }
+}

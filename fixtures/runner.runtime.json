@@ -6,7 +6,7 @@
     "namespace": "core",
     "labels": {
       "app": "runner",
-      "owner": "shineseed"
+      "owner": "xyn-seed"
     }
   },
   "release": {
@@ -29,12 +29,12 @@
         "containers": [
           {
             "name": "runner-api",
-            "image": "xyence/runner-api:dev",
+            "image": "xyence/xyn-runner-api:git-b56708f",
             "ports": [
               { "name": "http", "containerPort": 8088, "publishedPort": 8088, "protocol": "tcp" }
             ],
             "env": [
-              { "name": "RUNNER_QUEUE_URL", "value": "redis://runner-redis:6379/0" },
+              { "name": "RUNNER_REDIS_URL", "value": "redis://runner-redis:6379/0" },
               { "name": "RUNNER_WORKSPACE", "value": "/workspace" },
               { "name": "RUNNER_LOG_LEVEL", "value": "info" }
             ],
@@ -53,9 +53,9 @@
         "containers": [
           {
             "name": "runner-worker",
-            "image": "xyence/runner-worker:dev",
+            "image": "xyence/xyn-runner-worker:git-b56708f",
             "env": [
-              { "name": "RUNNER_QUEUE_URL", "value": "redis://runner-redis:6379/0" },
+              { "name": "RUNNER_REDIS_URL", "value": "redis://runner-redis:6379/0" },
               { "name": "RUNNER_WORKSPACE", "value": "/workspace" },
               { "name": "RUNNER_LOG_LEVEL", "value": "info" }
             ],
@@ -76,6 +76,12 @@
           {
             "name": "runner-redis",
             "image": "redis:7-alpine",
+            "healthcheck": {
+              "test": ["CMD", "redis-cli", "ping"],
+              "interval": "10s",
+              "timeout": "5s",
+              "retries": 5
+            },
             "ports": [
               { "name": "redis", "containerPort": 6379, "publishedPort": 6379, "protocol": "tcp" }
             ]

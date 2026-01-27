@@ -15,7 +15,7 @@ This folder contains shared contracts consumed by:
 - `schemas/ReleasePlan.schema.json`
 - `schemas/ReleaseStatus.schema.json`
 - `schemas/Operation.schema.json`
-- `openapi/shineseed-controlplane.yaml`
+- `openapi/xynseed-controlplane.yaml`
 - `fixtures/runner.release.json`
 - `fixtures/runner.runtime.json`
 # xyn-contracts

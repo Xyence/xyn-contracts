@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xyn.example/schemas/ReleaseSummary.schema.json",
+  "title": "ReleaseSummary",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "releaseId",
+    "name",
+    "namespace",
+    "desiredRevision",
+    "backend",
+    "updatedAt"
+  ],
+  "properties": {
+    "releaseId": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "namespace": {
+      "type": "string"
+    },
+    "desiredRevision": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "backend": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

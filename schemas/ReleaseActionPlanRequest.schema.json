@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xyn.example/schemas/ReleaseActionPlanRequest.schema.json",
+  "title": "ReleaseActionPlanRequest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "releaseId",
+    "action"
+  ],
+  "properties": {
+    "releaseId": {
+      "type": "string"
+    },
+    "action": {
+      "type": "string",
+      "enum": [
+        "stop",
+        "restart",
+        "destroy"
+      ]
+    },
+    "options": {
+      "type": "object",
+      "additionalProperties": true,
+      "default": {}
+    }
+  }
+}
