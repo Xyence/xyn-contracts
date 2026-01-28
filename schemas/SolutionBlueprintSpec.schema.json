@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xyn.example/schemas/SolutionBlueprintSpec.schema.json",
+  "title": "SolutionBlueprintSpec",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "releaseSpec"
+  ],
+  "properties": {
+    "apiVersion": {
+      "type": "string",
+      "enum": [
+        "xyn.blueprint/v1"
+      ],
+      "default": "xyn.blueprint/v1"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "Blueprint",
+        "SolutionBlueprint"
+      ],
+      "default": "SolutionBlueprint"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "namespace"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "namespace": {
+          "type": "string",
+          "minLength": 1
+        },
+        "labels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "default": {}
+        }
+      }
+    },
+    "description": {
+      "type": "string"
+    },
+    "requirements": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "releaseSpec": {
+      "$ref": "./ReleaseSpec.schema.json"
+    }
+  }
+}

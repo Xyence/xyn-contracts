@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xyn.example/schemas/BlueprintInstance.schema.json",
+  "title": "BlueprintInstance",
+  "type": "object",
+  "additionalProperties": false,
+  "oneOf": [
+    {
+      "required": [
+        "blueprintId",
+        "revision",
+        "status"
+      ],
+      "properties": {
+        "blueprintId": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "integer"
+        },
+        "releaseId": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "pending",
+            "planned",
+            "applied",
+            "failed"
+          ]
+        },
+        "planId": {
+          "type": "string"
+        },
+        "operationId": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string"
+        }
+      }
+    },
+    {
+      "required": [
+        "targetKind",
+        "targetFqn",
+        "targetRevision",
+        "status"
+      ],
+      "properties": {
+        "targetKind": {
+          "type": "string",
+          "enum": [
+            "solution",
+            "bundle"
+          ]
+        },
+        "targetFqn": {
+          "type": "string"
+        },
+        "targetRevision": {
+          "type": "integer"
+        },
+        "releaseId": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "pending",
+            "planned",
+            "applied",
+            "failed"
+          ]
+        },
+        "planId": {
+          "type": "string"
+        },
+        "operationId": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string"
+        }
+      }
+    }
+  ]
+}
