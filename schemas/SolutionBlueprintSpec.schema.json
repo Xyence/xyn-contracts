@@ -61,6 +61,86 @@
       },
       "default": []
     },
+    "intent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sourceDraftSessionId", "createdFrom", "prompt", "requirements"],
+      "properties": {
+        "sourceDraftSessionId": { "type": "string", "minLength": 1 },
+        "createdFrom": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "id"],
+          "properties": {
+            "type": { "const": "draft" },
+            "id": { "type": "string", "minLength": 1 }
+          }
+        },
+        "prompt": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["text", "sha256", "createdAt"],
+          "properties": {
+            "text": { "type": "string" },
+            "sha256": { "type": "string", "minLength": 32 },
+            "createdAt": { "type": "string", "format": "date-time" }
+          }
+        },
+        "transcripts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id"],
+            "properties": {
+              "id": { "type": "string", "minLength": 1 },
+              "ref": { "type": "string" },
+              "text": { "type": "string" },
+              "sha256": { "type": "string", "minLength": 32 },
+              "createdAt": { "type": "string", "format": "date-time" }
+            }
+          },
+          "default": []
+        },
+        "requirements": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["summary", "functional", "ui", "dataModel", "operational", "definitionOfDone"],
+          "properties": {
+            "summary": { "type": "string" },
+            "functional": { "type": "array", "items": { "type": "string" }, "default": [] },
+            "ui": { "type": "array", "items": { "type": "string" }, "default": [] },
+            "dataModel": { "type": "array", "items": { "type": "string" }, "default": [] },
+            "operational": { "type": "array", "items": { "type": "string" }, "default": [] },
+            "definitionOfDone": { "type": "array", "items": { "type": "string" }, "default": [] }
+          }
+        },
+        "codegen": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "repoTarget": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "name": { "type": "string" },
+                "url": { "type": "string" },
+                "ref": { "type": "string" },
+                "pathRoot": { "type": "string" }
+              }
+            },
+            "layout": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "apiPath": { "type": "string" },
+                "webPath": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
     "releaseSpec": {
       "$ref": "./ReleaseSpec.schema.json"
     }
