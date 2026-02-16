@@ -94,6 +94,10 @@
               "context"
             ],
             "properties": {
+              "repoTarget": {
+                "type": "string",
+                "minLength": 1
+              },
               "context": {
                 "type": "string",
                 "minLength": 1
@@ -243,6 +247,23 @@
           }
         ]
       }
+    },
+    "repoTargets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "url"],
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "url": {"type": "string", "minLength": 1},
+          "ref": {"type": "string"},
+          "path_root": {"type": "string"},
+          "auth": {"type": "string"},
+          "allow_write": {"type": "boolean"}
+        }
+      },
+      "default": []
     },
     "volumes": {
       "type": "array",
